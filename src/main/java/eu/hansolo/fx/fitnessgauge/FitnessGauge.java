@@ -107,7 +107,7 @@ public class FitnessGauge extends Region {
     }
 
     private void initGraphics(final double MAX_OUTER_VALUE, final double MAX_MIDDLE_VALUE, final double MAX_INNER_VALUE) {
-        shadow      = new DropShadow(BlurType.TWO_PASS_BOX, Color.rgb(0, 0, 0, 0.65), 0.01 * PREFERRED_WIDTH, 0, 0.01 * PREFERRED_WIDTH, 0);
+        shadow      = new DropShadow(BlurType.TWO_PASS_BOX, Color.rgb(0, 0, 0, 0.45), 0.01 * PREFERRED_WIDTH, 0, 0.01 * PREFERRED_WIDTH, 0);
         textShadow  = new DropShadow(BlurType.TWO_PASS_BOX, Color.BLACK, 1, 1, 0, 0);
 
         outerGauge  = createGauge(MAX_OUTER_VALUE, Color.rgb(237, 22, 72));
@@ -205,8 +205,8 @@ public class FitnessGauge extends Region {
                           .gradientBarEnabled(true)
                           .gradientBarStops(new Stop(0.0, COLOR),
                                             new Stop(0.01, COLOR),
-                                            new Stop(0.5, COLOR.deriveColor(-15, 1, 1, 1)),
-                                            new Stop(1.0, COLOR.deriveColor(-30, 1, 1, 1)))
+                                            new Stop(0.75, COLOR.deriveColor(-10, 1, 1, 1)),
+                                            new Stop(1.0, COLOR.deriveColor(-20, 1, 1, 1)))
                           .barColor(COLOR)
                           .build();
     }
@@ -310,8 +310,8 @@ public class FitnessGauge extends Region {
             innerArc.setRadiusY(size * 0.20);
             innerArc.setStrokeWidth(size * 0.11);
 
-            shadow.setRadius(0.02 * size);
-            shadow.setOffsetX(0.02 * size);
+            shadow.setRadius(0.03 * size);
+            shadow.setOffsetX(0.03 * size);
 
             Rectangle bounds = new Rectangle(0, 0, size, size);
 

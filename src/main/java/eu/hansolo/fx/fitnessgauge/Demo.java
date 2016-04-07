@@ -46,6 +46,12 @@ public class Demo extends Application {
                                    .outerText("MOVE")
                                    .middleText("EXCERISE")
                                    .innerText("STAND")
+                                   //.outerTextVisible(false)
+                                   //.middleTextVisible(false)
+                                   //.innerTextVisible(false)
+                                   //.outerValue(125)
+                                   //.middleValue(100)
+                                   //.innerValue(100)
                                    .build();
 
         lastTimerCall = System.nanoTime();
@@ -71,7 +77,7 @@ public class Demo extends Application {
         stage.setScene(scene);
         stage.show();
 
-        timer.start();
+        //timer.start();
     }
 
     @Override public void stop() {
