@@ -77,7 +77,7 @@ public class Demo extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //timer.start();
+        timer.start();
     }
 
     @Override public void stop() {
