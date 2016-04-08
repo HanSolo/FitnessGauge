@@ -26,6 +26,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
@@ -49,6 +50,7 @@ public class FitnessGauge extends Region {
     private static final double MAXIMUM_WIDTH    = 1024;
     private static final double MAXIMUM_HEIGHT   = 1024;
     private double              size;
+    private double              center;
     private Pane                pane;
     private Gauge               outerGauge;
     private Gauge               middleGauge;
@@ -73,6 +75,12 @@ public class FitnessGauge extends Region {
     private double              innerAngleStep;
     private DropShadow          shadow;
     private DropShadow          textShadow;
+    private ConicalGradient     outerGradient;
+    private ConicalGradient     middleGradient;
+    private ConicalGradient     innerGradient;
+    private ImagePattern        outerPattern;
+    private ImagePattern        middlePattern;
+    private ImagePattern        innerPattern;
 
 
     // ******************** Constructors **************************************
@@ -80,8 +88,10 @@ public class FitnessGauge extends Region {
     public FitnessGauge(final double MAX_OUTER_VALUE, final double MAX_MIDDLE_VALUE, final double MAX_INNER_VALUE) {
         getStylesheets().add(FitnessGauge.class.getResource("fitnessgauge.css").toExternalForm());
         getStyleClass().add("fitness-gauge");
+        center = PREFERRED_WIDTH * 0.5;
         init();
         initGraphics(MAX_OUTER_VALUE, MAX_MIDDLE_VALUE, MAX_INNER_VALUE);
+        createGradients();
         registerListeners();
     }
 
@@ -212,19 +222,19 @@ public class FitnessGauge extends Region {
     }
 
     public double getOuterMaxValue() { return outerGauge.getMaxValue(); }
-    public void setOuterMaxValue(final double TARGET) { outerGauge.setMaxValue(TARGET); }
+    public void setOuterMaxValue(final double VALUE) { outerGauge.setMaxValue(clamp(0d, Double.MAX_VALUE, VALUE)); }
 
     public double getOuterValue() { return outerGauge.getCurrentValue(); }
     public void setOuterValue(final double VALUE) { outerGauge.setValue(VALUE); }
 
     public double getMiddleMaxValue() { return middleGauge.getMaxValue(); }
-    public void setMiddleMaxValue(final double TARGET) { middleGauge.setMaxValue(TARGET); }
+    public void setMiddleMaxValue(final double VALUE) { middleGauge.setMaxValue(clamp(0d, Double.MAX_VALUE, VALUE)); }
 
     public double getMiddleValue() { return middleGauge.getCurrentValue(); }
     public void setMiddleValue(final double VALUE) { middleGauge.setValue(VALUE); }
 
     public double getInnerMaxValue() { return innerGauge.getMaxValue(); }
-    public void setInnerMaxValue(final double TARGET) { innerGauge.setMaxValue(TARGET); }
+    public void setInnerMaxValue(final double VALUE) { innerGauge.setMaxValue(clamp(0d, Double.MAX_VALUE, VALUE)); }
 
     public double getInnerValue() { return innerGauge.getCurrentValue(); }
     public void setInnerValue(final double VALUE) { innerGauge.setValue(VALUE); }
@@ -262,6 +272,19 @@ public class FitnessGauge extends Region {
         return VALUE;
     }
 
+    private void createGradients() {
+        outerGradient  = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, outerGauge.getGradientBarStops());
+        middleGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, middleGauge.getGradientBarStops());
+        innerGradient  = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, innerGauge.getGradientBarStops());
+    }
+
+    private void createImagePatterns() {
+        Rectangle bounds = new Rectangle(0, 0, MAXIMUM_WIDTH, MAXIMUM_HEIGHT);
+        outerPattern     = outerGradient.getImagePattern(bounds);
+        middlePattern    = middleGradient.getImagePattern(bounds);
+        innerPattern     = innerGradient.getImagePattern(bounds);
+    }
+
 
     // ******************** Resizing ******************************************
     private void resize() {
@@ -275,7 +298,7 @@ public class FitnessGauge extends Region {
             pane.setPrefSize(size, size);
             pane.relocate((getWidth() - size) * 0.5, (getHeight() - size) * 0.5);
 
-            double center = size * 0.5;
+            center = size * 0.5;
 
             outerCircle.setCenterX(center);
             outerCircle.setCenterY(center);
@@ -313,21 +336,21 @@ public class FitnessGauge extends Region {
             shadow.setRadius(0.03 * size);
             shadow.setOffsetX(0.03 * size);
 
-            Rectangle bounds = new Rectangle(0, 0, size, size);
-
             outerCircle.setStroke(Color.color(getOuterColor().getRed(), getOuterColor().getGreen(), getOuterColor().getBlue(), 0.13));
             middleCircle.setStroke(Color.color(getMiddleColor().getRed(), getMiddleColor().getGreen(), getMiddleColor().getBlue(), 0.13));
             innerCircle.setStroke(Color.color(getInnerColor().getRed(), getInnerColor().getGreen(), getInnerColor().getBlue(), 0.13));
 
-            ConicalGradient outerGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, outerGauge.getGradientBarStops());
+            Rectangle bounds = new Rectangle(0, 0, size, size);
+
+            outerGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, outerGauge.getGradientBarStops());
             outerArc.setStroke(outerGradient.getImagePattern(bounds));
             outerArc.setLength(outerGauge.getCurrentValue() * outerAngleStep);
 
-            ConicalGradient middleGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, middleGauge.getGradientBarStops());
+            middleGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, middleGauge.getGradientBarStops());
             middleArc.setStroke(middleGradient.getImagePattern(bounds));
             middleArc.setLength(middleGauge.getCurrentValue() * middleAngleStep);
 
-            ConicalGradient innerGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, innerGauge.getGradientBarStops());
+            innerGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, innerGauge.getGradientBarStops());
             innerArc.setStroke(innerGradient.getImagePattern(bounds));
             innerArc.setLength(innerGauge.getCurrentValue() * innerAngleStep);
 
@@ -391,8 +414,6 @@ public class FitnessGauge extends Region {
         double outerRotate  = outerAngle  < -360 ? outerAngle  + 360 : 0;
         double middleRotate = middleAngle < -360 ? middleAngle + 360 : 0;
         double innerRotate  = innerAngle  < -360 ? innerAngle  + 360 : 0;
-
-        double center       = size * 0.5;
 
         outerArc.setRotate(-outerRotate);
         middleArc.setRotate(-middleRotate);
