@@ -78,9 +78,6 @@ public class FitnessGauge extends Region {
     private ConicalGradient     outerGradient;
     private ConicalGradient     middleGradient;
     private ConicalGradient     innerGradient;
-    private ImagePattern        outerPattern;
-    private ImagePattern        middlePattern;
-    private ImagePattern        innerPattern;
 
 
     // ******************** Constructors **************************************
@@ -91,7 +88,6 @@ public class FitnessGauge extends Region {
         center = PREFERRED_WIDTH * 0.5;
         init();
         initGraphics(MAX_OUTER_VALUE, MAX_MIDDLE_VALUE, MAX_INNER_VALUE);
-        createGradients();
         registerListeners();
     }
 
@@ -270,19 +266,6 @@ public class FitnessGauge extends Region {
         if (VALUE.doubleValue() < MIN.doubleValue()) return MIN;
         if (VALUE.doubleValue() > MAX.doubleValue()) return MAX;
         return VALUE;
-    }
-
-    private void createGradients() {
-        outerGradient  = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, outerGauge.getGradientBarStops());
-        middleGradient = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, middleGauge.getGradientBarStops());
-        innerGradient  = new ConicalGradient(center, center, ScaleDirection.CLOCKWISE, innerGauge.getGradientBarStops());
-    }
-
-    private void createImagePatterns() {
-        Rectangle bounds = new Rectangle(0, 0, MAXIMUM_WIDTH, MAXIMUM_HEIGHT);
-        outerPattern     = outerGradient.getImagePattern(bounds);
-        middlePattern    = middleGradient.getImagePattern(bounds);
-        innerPattern     = innerGradient.getImagePattern(bounds);
     }
 
 
