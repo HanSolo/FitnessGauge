@@ -52,7 +52,7 @@ public class Demo extends Application {
                                    //.outerValue(125)
                                    //.middleValue(100)
                                    //.innerValue(100)
-                                   .middleColor(Color.rgb(200, 100, 0))
+                                   .middleColor(Color.rgb(220, 200, 0))
                                    .build();
 
         lastTimerCall = System.nanoTime();
