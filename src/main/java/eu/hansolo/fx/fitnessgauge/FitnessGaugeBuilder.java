@@ -27,6 +27,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 
@@ -104,6 +105,21 @@ public class FitnessGaugeBuilder<B extends FitnessGaugeBuilder<B>> {
 
     public final B innerValue(final double VALUE) {
         properties.put("innerValue", new SimpleDoubleProperty(VALUE));
+        return (B)this;
+    }
+
+    public final B outerColor(final Color COLOR) {
+        properties.put("outerColor", new SimpleObjectProperty<>(COLOR));
+        return (B)this;
+    }
+
+    public final B middleColor(final Color COLOR) {
+        properties.put("middleColor", new SimpleObjectProperty<>(COLOR));
+        return (B)this;
+    }
+
+    public final B innerColor(final Color COLOR) {
+        properties.put("innerColor", new SimpleObjectProperty<>(COLOR));
         return (B)this;
     }
 
@@ -241,9 +257,14 @@ public class FitnessGaugeBuilder<B extends FitnessGaugeBuilder<B>> {
                 CONTROL.setMiddleValue(((DoubleProperty) properties.get(key)).get());
             } else if ("innerValue".equals(key)) {
                 CONTROL.setInnerValue(((DoubleProperty) properties.get(key)).get());
+            } else if ("outerColor".equals(key)) {
+                CONTROL.setOuterColor(((ObjectProperty<Color>) properties.get(key)).get());
+            } else if ("middleColor".equals(key)) {
+                CONTROL.setMiddleColor(((ObjectProperty<Color>) properties.get(key)).get());
+            } else if ("innerColor".equals(key)) {
+                CONTROL.setInnerColor(((ObjectProperty<Color>) properties.get(key)).get());
             }
         }
         return CONTROL;
     }
 }
-

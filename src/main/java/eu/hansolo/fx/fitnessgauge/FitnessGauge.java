@@ -41,12 +41,15 @@ import javafx.scene.text.Text;
  * Time: 10:45
  */
 public class FitnessGauge extends Region {
-    private static final double PREFERRED_WIDTH  = 250;
-    private static final double PREFERRED_HEIGHT = 250;
-    private static final double MINIMUM_WIDTH    = 50;
-    private static final double MINIMUM_HEIGHT   = 50;
-    private static final double MAXIMUM_WIDTH    = 1024;
-    private static final double MAXIMUM_HEIGHT   = 1024;
+    private static final double PREFERRED_WIDTH      = 250;
+    private static final double PREFERRED_HEIGHT     = 250;
+    private static final double MINIMUM_WIDTH        = 50;
+    private static final double MINIMUM_HEIGHT       = 50;
+    private static final double MAXIMUM_WIDTH        = 1024;
+    private static final double MAXIMUM_HEIGHT       = 1024;
+    private static final Color  DEFAULT_OUTER_COLOR  = Color.rgb(237, 22, 72);
+    private static final Color  DEFAULT_MIDDLE_COLOR = Color.rgb(123, 238, 0);
+    private static final Color  DEFAULT_INNER_COLOR  = Color.rgb(0, 212, 216);
     private double              size;
     private double              center;
     private Pane                pane;
@@ -234,13 +237,25 @@ public class FitnessGauge extends Region {
     public void setInnerValue(final double VALUE) { innerGauge.setValue(VALUE); }
 
     public Color getOuterColor() { return outerGauge.getBarColor(); }
-    public void setOuterColor(final Color COLOR) { outerGauge.setBarColor(COLOR); resize(); }
+    public void setOuterColor(final Color COLOR) {
+        outerGauge.setBarColor(COLOR);
+        createGradient(outerGauge, COLOR);
+        resize();
+    }
 
     public Color getMiddleColor() { return middleGauge.getBarColor(); }
-    public void setMiddleColor(final Color COLOR) { middleGauge.setBarColor(COLOR); resize(); }
+    public void setMiddleColor(final Color COLOR) {
+        middleGauge.setBarColor(COLOR);
+        createGradient(middleGauge, COLOR);
+        resize();
+    }
 
     public Color getInnerColor() { return innerGauge.getBarColor(); }
-    public void setInnerColor(final Color COLOR) { innerGauge.setBarColor(COLOR); resize(); }
+    public void setInnerColor(final Color COLOR) {
+        innerGauge.setBarColor(COLOR);
+        createGradient(innerGauge, COLOR);
+        resize();
+    }
 
     public String getOuterText() { return outerText.getText(); }
     public void setOuterText(final String TEXT) { outerText.setText(TEXT.toUpperCase()); }
@@ -259,6 +274,13 @@ public class FitnessGauge extends Region {
 
     public boolean isInnerTextVisible() { return innerText.isVisible(); }
     public void setInnerTextVisible(final boolean VISIBLE) { innerText.setVisible(VISIBLE); }
+
+    private void createGradient(final Gauge GAUGE, final Color COLOR) {
+        GAUGE.setGradientBarStops(new Stop(0.0, COLOR),
+                                  new Stop(0.01, COLOR),
+                                  new Stop(0.75, COLOR.deriveColor(-10, 1, 1, 1)),
+                                  new Stop(1.0, COLOR.deriveColor(-20, 1, 1, 1)));
+    }
 
     private static final <T extends Number> T clamp(final T MIN, final T MAX, final T VALUE) {
         if (VALUE.doubleValue() < MIN.doubleValue()) return MIN;
