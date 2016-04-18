@@ -117,9 +117,9 @@ public class FitnessGauge extends Region {
         shadow      = new DropShadow(BlurType.TWO_PASS_BOX, Color.rgb(0, 0, 0, 0.45), 0.01 * PREFERRED_WIDTH, 0, 0.01 * PREFERRED_WIDTH, 0);
         textShadow  = new DropShadow(BlurType.TWO_PASS_BOX, Color.BLACK, 1, 1, 0, 0);
 
-        outerGauge  = createGauge(MAX_OUTER_VALUE, Color.rgb(237, 22, 72));
-        middleGauge = createGauge(MAX_MIDDLE_VALUE, Color.rgb(123, 238, 0));
-        innerGauge  = createGauge(MAX_INNER_VALUE, Color.rgb(0, 212, 216));
+        outerGauge  = createGauge(MAX_OUTER_VALUE, DEFAULT_OUTER_COLOR);
+        middleGauge = createGauge(MAX_MIDDLE_VALUE, DEFAULT_MIDDLE_COLOR);
+        innerGauge  = createGauge(MAX_INNER_VALUE, DEFAULT_INNER_COLOR);
 
         outerCircle = new Circle();
         outerCircle.setFill(null);
